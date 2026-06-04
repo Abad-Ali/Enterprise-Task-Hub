@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 const corsOption = {
-  origin: ['http://localhost:3000'],
+  origin: ['http://localhost:3000' , "https://enterprise-task-hub.onrender.com"],
   credentials: true
 };
 app.use(cors(corsOption));
