@@ -47,7 +47,7 @@ export default function ManageTasks() {
     priority: "medium",
     dueDate: "",
   });
-  
+
   const [expandedTask, setExpandedTask] = useState(null);
 
   useEffect(() => {
@@ -70,8 +70,7 @@ export default function ManageTasks() {
   };
 
   const createTask = async () => {
-    if (!form.title || !form.assignedTo)
-      return alert("Fill required fields");
+    if (!form.title || !form.assignedTo) return alert("Fill required fields");
 
     setLoading(true);
 
@@ -97,11 +96,11 @@ export default function ManageTasks() {
     await axios.patch(
       `${API}/api/v1/task/${taskId}/review`,
       { status },
-      { withCredentials: true }
+      { withCredentials: true },
     );
 
     setTasks((prev) =>
-      prev.map((t) => (t._id === taskId ? { ...t, status } : t))
+      prev.map((t) => (t._id === taskId ? { ...t, status } : t)),
     );
   };
 
@@ -121,7 +120,7 @@ export default function ManageTasks() {
 
   const submittedTasks = useMemo(
     () => tasks.filter((t) => t.status === "under-review"),
-    [tasks]
+    [tasks],
   );
 
   const allTasks = useMemo(() => tasks, [tasks]);
@@ -138,7 +137,7 @@ export default function ManageTasks() {
         return "bg-blue-500/20 text-blue-300 border-blue-500/30";
     }
   };
-  
+
   const getPriorityColor = (priority) => {
     switch (priority?.toLowerCase()) {
       case "high":
@@ -152,10 +151,9 @@ export default function ManageTasks() {
 
   return (
     <div className="min-h-screen text-white px-6 py-10 pt-24 relative overflow-hidden flex flex-col items-center">
-
       {/* Background Glow */}
-      <div className="absolute top-20 right-0 w-[400px] h-[400px] bg-blue-500/10 blur-[150px] rounded-full" />
-      <div className="absolute bottom-0 left-0 w-[350px] h-[350px] bg-purple-500/10 blur-[150px] rounded-full" />
+      <div className="absolute top-20 right-0 w-[400px] h-[400px] bg-blue-500/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[350px] h-[350px] bg-purple-500/10 blur-[150px] rounded-full pointer-events-none" />
 
       {/* HEADER */}
       <motion.div
@@ -194,34 +192,36 @@ export default function ManageTasks() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-2xl max-w-3xl w-full"
+            className="bg-white/5 border border-white/10 backdrop-blur-xl p-4 sm:p-6 lg:p-8 rounded-3xl shadow-2xl max-w-3xl w-full"
           >
-            <h2 className="text-2xl font-semibold mb-6 text-center">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-5 sm:mb-6 text-center">
               Create New Task
             </h2>
 
-            <div className="grid gap-4">
+            <div className="flex flex-col gap-4">
+              {/* TITLE */}
               <input
                 placeholder="Task Title"
-                className="p-3 rounded-xl bg-black/40 border border-white/10 focus:outline-none focus:border-blue-500"
+                className="w-full p-3 rounded-xl bg-black/40 border border-white/10 focus:outline-none focus:border-blue-500"
                 value={form.title}
-                onChange={(e) =>
-                  setForm({ ...form, title: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
 
+              {/* DESCRIPTION */}
               <textarea
                 placeholder="Task Description"
-                className="p-3 rounded-xl bg-black/40 border border-white/10 focus:outline-none focus:border-blue-500 h-28"
+                className="w-full p-3 rounded-xl bg-black/40 border border-white/10 focus:outline-none focus:border-blue-500 h-28"
                 value={form.description}
                 onChange={(e) =>
                   setForm({ ...form, description: e.target.value })
                 }
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* RESPONSIVE GRID (FIXED) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* SELECT EMPLOYEE */}
                 <select
-                  className="p-3 rounded-xl bg-black/40 border border-white/10"
+                  className="w-full min-w-0 p-3 rounded-xl bg-black/40 border border-white/10 text-sm sm:text-base"
                   value={form.assignedTo}
                   onChange={(e) =>
                     setForm({ ...form, assignedTo: e.target.value })
@@ -235,9 +235,10 @@ export default function ManageTasks() {
                   ))}
                 </select>
 
+                {/* DATE */}
                 <input
                   type="date"
-                  className="p-3 rounded-xl bg-black/40 border border-white/10"
+                  className="w-full min-w-0 p-3 rounded-xl bg-black/40 border border-white/10 text-sm sm:text-base"
                   value={form.dueDate}
                   onChange={(e) =>
                     setForm({ ...form, dueDate: e.target.value })
@@ -245,10 +246,11 @@ export default function ManageTasks() {
                 />
               </div>
 
+              {/* BUTTON */}
               <button
                 onClick={createTask}
                 disabled={loading}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 py-3 rounded-xl font-semibold hover:scale-[1.02] transition cursor-pointer"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 py-3 rounded-xl font-semibold hover:scale-[1.02] transition"
               >
                 {loading ? "Creating..." : "Assign Task"}
               </button>
@@ -267,17 +269,17 @@ export default function ManageTasks() {
           {submittedTasks.length === 0 ? (
             <div className="w-full flex justify-center">
               <div className="flex flex-col items-center justify-center gap-3 p-8 rounded-2xl bg-black/10 border border-white/10 backdrop-blur-sm w-full">
-                
                 <div className="p-3 rounded-full bg-black/20">
                   <Inbox className="w-6 h-6 text-white/60" />
                 </div>
-            
+
                 <h3 className="text-white/70 text-lg font-medium">
                   No tasks under review
                 </h3>
-            
+
                 <p className="text-white/40 text-sm text-center">
-                  When employees submit tasks, they will appear here for approval.
+                  When employees submit tasks, they will appear here for
+                  approval.
                 </p>
               </div>
             </div>
@@ -292,26 +294,25 @@ export default function ManageTasks() {
                 <h3 className="text-xl font-semibold">{task.title}</h3>
 
                 <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-
                   {/* Submission Note */}
                   <div>
                     <p className="font-semibold text-[15px] mb-2">
                       Submission Note
                     </p>
-                
+
                     <div className="p-3 bg-black/10 backdrop-blur-sm border border-white/20 rounded-xl h-[180px] overflow-y-auto scrollable">
                       <p className="text-white/90 whitespace-pre-wrap">
                         {task.submissionNote || "No submission note provided."}
                       </p>
                     </div>
                   </div>
-                
+
                   {/* Attachments */}
                   <div>
                     <p className="font-semibold text-[15px] mb-2">
                       Attachments
                     </p>
-                
+
                     <div className="p-3 bg-black/10 backdrop-blur-sm border border-white/20 rounded-xl h-[180px] overflow-y-auto scrollable">
                       {task.attachments?.length > 0 ? (
                         <div className="flex flex-col gap-2">
@@ -334,32 +335,27 @@ export default function ManageTasks() {
                       )}
                     </div>
                   </div>
-                
                 </div>
 
-                <hr className="mt-3"/>
-                <div className="flex justify-between items-end">
+                <hr className="mt-3" />
+                <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-2 sm:gap-0">
                   <div className="flex gap-3 mt-2">
                     <button
-                      onClick={() =>
-                        reviewTask(task._id, "completed")
-                      }
+                      onClick={() => reviewTask(task._id, "completed")}
                       className="px-4 py-2 rounded-lg bg-green-500/20 text-green-300"
                     >
                       Approve
                     </button>
-  
+
                     <button
-                      onClick={() =>
-                        reviewTask(task._id, "rejected")
-                      }
+                      onClick={() => reviewTask(task._id, "rejected")}
                       className="px-4 py-2 rounded-lg bg-red-500/20 text-red-300"
                     >
                       Reject
                     </button>
                   </div>
 
-                  <div className="text-xs sm:text-sm text-white/60">
+                  <div className="text-xs sm:text-sm text-white/60 text-end">
                     Submitted By:{" "}
                     <span className="text-white font-medium">
                       @{task?.assignedTo?.username || "unknown"}
@@ -375,22 +371,19 @@ export default function ManageTasks() {
       {/* ================= ALL ================= */}
       {activeTab === "all" && (
         <div className="w-full flex flex-col items-center gap-4 max-w-4xl">
-          <h2 className="text-2xl font-semibold text-center">
-            All Tasks
-          </h2>
+          <h2 className="text-2xl font-semibold text-center">All Tasks</h2>
 
           {allTasks.length === 0 ? (
             <div className="w-full flex justify-center">
               <div className="flex flex-col items-center justify-center gap-3 p-8 rounded-2xl bg-black/10 border border-white/10 backdrop-blur-sm w-full">
-                
                 <div className="p-3 rounded-full bg-black/20">
                   <Inbox className="w-6 h-6 text-white/60" />
                 </div>
-            
+
                 <h3 className="text-white/70 text-lg font-medium">
                   No tasks to show
                 </h3>
-            
+
                 <p className="text-white/40 text-sm text-center">
                   When a task is added, it will appear here.
                 </p>
@@ -406,25 +399,22 @@ export default function ManageTasks() {
               >
                 <div className="p-5">
                   <div className="flex flex-col lg:flex-row lg:justify-between gap-5">
-            
                     {/* LEFT */}
                     <div className="flex-1">
-                      <h3 className="text-2xl font-semibold">
-                        {task.title}
-                      </h3>
-            
+                      <h3 className="text-2xl font-semibold">{task.title}</h3>
+
                       <div className="flex flex-wrap gap-2 mt-3">
                         <span
                           className={`px-3 py-1 rounded-full border text-xs ${getStatusColor(
-                            task.status
+                            task.status,
                           )}`}
                         >
                           {task.status}
                         </span>
-            
+
                         <span
                           className={`px-3 py-1 rounded-full border text-xs flex items-center gap-1 ${getPriorityColor(
-                            task.priority
+                            task.priority,
                           )}`}
                         >
                           <Flag size={12} />
@@ -432,7 +422,7 @@ export default function ManageTasks() {
                         </span>
                       </div>
                     </div>
-            
+
                     {/* ACTIONS */}
                     <div className="flex flex-wrap gap-2">
                       <Button
@@ -440,24 +430,22 @@ export default function ManageTasks() {
                         className="bg-white/5 border-white/10"
                         onClick={() =>
                           setExpandedTask(
-                            expandedTask === task._id
-                              ? null
-                              : task._id
+                            expandedTask === task._id ? null : task._id,
                           )
                         }
                       >
                         <Eye size={16} />
                         <span className="ml-2">Details</span>
-            
+
                         {expandedTask === task._id ? (
                           <ChevronUp size={16} className="ml-2" />
                         ) : (
                           <ChevronDown size={16} className="ml-2" />
                         )}
                       </Button>
-            
+
                       <EditTaskDialog task={task} onUpdated={fetchTasks} />
-            
+
                       <Button
                         onClick={() => setTaskToDelete(task)}
                         className="bg-red-500/20 text-red-300 hover:bg-red-500/30"
@@ -466,7 +454,7 @@ export default function ManageTasks() {
                       </Button>
                     </div>
                   </div>
-            
+
                   {/* QUICK INFO */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5">
                     <div className="bg-black/20 border border-white/10 rounded-xl p-4">
@@ -474,44 +462,42 @@ export default function ManageTasks() {
                         <User size={15} />
                         Assigned To
                       </div>
-            
+
                       <p className="mt-2 font-medium">
                         {task.assignedTo?.name ||
                           task.assignedTo?.username ||
                           "Unknown"}
                       </p>
                     </div>
-            
+
                     <div className="bg-black/20 border border-white/10 rounded-xl p-4">
                       <div className="flex items-center gap-2 text-white/50 text-sm">
                         <UserCog size={15} />
                         Assigned By
                       </div>
-            
+
                       <p className="mt-2 font-medium">
                         {task.assignedBy?.name ||
                           task.assignedBy?.username ||
                           "Unknown"}
                       </p>
                     </div>
-            
+
                     <div className="bg-black/20 border border-white/10 rounded-xl p-4">
                       <div className="flex items-center gap-2 text-white/50 text-sm">
                         <CalendarDays size={15} />
                         Due Date
                       </div>
-            
+
                       <p className="mt-2 font-medium">
                         {task.dueDate
-                          ? new Date(
-                              task.dueDate
-                            ).toLocaleDateString()
+                          ? new Date(task.dueDate).toLocaleDateString()
                           : "Not Set"}
                       </p>
                     </div>
                   </div>
                 </div>
-            
+
                 {/* DETAILS PANEL */}
                 {expandedTask === task._id && (
                   <motion.div
@@ -525,50 +511,43 @@ export default function ManageTasks() {
                     <div className="p-5">
                       <div className="flex items-center gap-2 mb-3">
                         <FileText size={16} />
-                        <h4 className="font-semibold">
-                          Task Description
-                        </h4>
+                        <h4 className="font-semibold">Task Description</h4>
                       </div>
-            
+
                       <div className="rounded-xl bg-black/20 border border-white/10 p-4">
                         <p className="text-white/80 whitespace-pre-wrap">
-                          {task.description ||
-                            "No description provided."}
+                          {task.description || "No description provided."}
                         </p>
                       </div>
-            
+
                       {task.submissionNote && (
                         <div className="mt-4">
                           <h4 className="font-semibold mb-2">
                             Submission Note
                           </h4>
-            
+
                           <div className="rounded-xl bg-black/20 border border-white/10 p-4">
                             {task.submissionNote}
                           </div>
                         </div>
                       )}
-            
+
                       {task.attachments?.length > 0 && (
                         <div className="mt-4">
-                          <h4 className="font-semibold mb-2">
-                            Attachments
-                          </h4>
-            
+                          <h4 className="font-semibold mb-2">Attachments</h4>
+
                           <div className="flex flex-col gap-2">
-                            {task.attachments.map(
-                              (attachment, index) => (
-                                <a
-                                  key={index}
-                                  href={attachment}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="rounded-xl bg-black/20 border border-white/10 p-3 text-blue-300 hover:bg-white/5 transition"
-                                >
-                                  📎 {attachment}
-                                </a>
-                              )
-                            )}
+                            {task.attachments.map((attachment, index) => (
+                              <a
+                                key={index}
+                                href={attachment}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="rounded-xl bg-black/20 border border-white/10 p-3 text-blue-300 hover:bg-white/5 transition"
+                              >
+                                📎 {attachment}
+                              </a>
+                            ))}
                           </div>
                         </div>
                       )}
