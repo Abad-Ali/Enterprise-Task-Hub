@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import Typewriter from "typewriter-effect";
 
 export default function Home() {
   const router = useRouter();
@@ -33,12 +35,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex items-center justify-center text-white px-6 pt-25 sm:pt-10 lg:pt-0">
-
       <div className="max-w-6xl w-full grid md:grid-cols-2 gap-10 items-center">
-
         {/* LEFT CONTENT */}
         <div>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -54,8 +53,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="mt-4 text-white/70 text-lg text-center md:text-start"
           >
-            Assign, track, and deliver work efficiently across your team.
-            A modern enterprise task management system built for productivity.
+            Assign, track, and deliver work efficiently across your team. A
+            modern enterprise task management system built for productivity.
           </motion.p>
 
           {/* BUTTONS */}
@@ -65,18 +64,27 @@ export default function Home() {
             transition={{ delay: 0.4 }}
             className="mt-6 flex flex-wrap gap-4 justify-center sm:justify-start"
           >
-
-            {/* 🔥 WELCOME MESSAGE (ONLY WHEN LOGGED IN) */}
+            {/*  WELCOME MESSAGE (ONLY WHEN LOGGED IN) */}
             {isLoggedIn && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-full font-bold text-white"
+                className="w-full font-bold text-white text-lg ml-3 sm:ml-0 flex items-baseline gap-2 leading-tight"
               >
-                Welcome back,{" "}
-                <span className="font-bold capitalize bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent text-[20px]">
-                  {user?.name}
+                <span>Welcome back,</span>
+                <span className="font-bold capitalize text-[25px]">
+                  <Typewriter
+                    options={{
+                      strings: [user?.name || ""],
+                      autoStart: true,
+                      loop: true,
+                      pauseFor: 700,
+                      cursor: "/",
+                      wrapperClassName:
+                        "bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent font-bold capitalize text-[25px]",
+                    }}
+                  />
                 </span>
               </motion.div>
             )}
@@ -86,9 +94,12 @@ export default function Home() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleExplore}
-              className="px-6 py-3 bg-white text-black rounded-lg font-medium"
+              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-medium group"
             >
-              {isLoggedIn ? "Go to Dashboard" : "Explore Dashboard"}
+              <div className="flex justify-center items-center gap-2">
+                {isLoggedIn ? "Go to Dashboard" : "Explore Dashboard"}{" "}
+                <ArrowRight className="group-hover:ml-1.5 duration-300" />
+              </div>
             </motion.button>
 
             {/* ONLY SHOW WHEN NOT LOGGED IN */}
@@ -122,7 +133,6 @@ export default function Home() {
             <p>✔ Real-time status tracking</p>
             <p>✔ Manager & employee workflow</p>
           </motion.div>
-
         </div>
 
         {/* RIGHT IMAGE SECTION */}
@@ -146,9 +156,7 @@ export default function Home() {
               height={500}
             />
           </motion.div>
-
         </motion.div>
-
       </div>
     </div>
   );

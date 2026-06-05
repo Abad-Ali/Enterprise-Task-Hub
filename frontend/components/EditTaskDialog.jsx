@@ -231,7 +231,7 @@ export default function EditTaskDialog({ task, onUpdated }) {
           <Button
             onClick={updateTask}
             disabled={loading}
-            className="flex-1 bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+            className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:bg-indigo-700 cursor-pointer"
           >
             {loading ? "Saving..." : "Save Changes"}
           </Button>

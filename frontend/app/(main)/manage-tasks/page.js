@@ -177,7 +177,7 @@ export default function ManageTasks() {
             onClick={() => setActiveTab(tab)}
             className={`px-5 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer ${
               activeTab === tab
-                ? "bg-white text-black shadow-lg"
+                ? "bg-gradient-to-r from-blue-500 to-purple-600 text-black shadow-lg"
                 : "bg-white/10 hover:bg-white/20"
             }`}
           >
