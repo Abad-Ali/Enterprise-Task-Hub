@@ -118,7 +118,7 @@ export default function EditTaskDialog({ task, onUpdated }) {
       </DialogTrigger>
 
       {/* MODAL */}
-      <DialogContent className="max-h-[82vh] md:max-h-[95vh] max-w-[95vw] sm:max-w-lg bg-zinc-950 text-white border border-zinc-800 rounded-2xl p-6 overflow-auto scrollable">
+      <DialogContent className="max-h-[85vh] md:max-h-[95vh] max-w-[95vw] sm:max-w-lg bg-zinc-950 text-white border border-zinc-800 rounded-2xl p-6 overflow-auto scrollable">
 
         {/* HEADER */}
         <DialogHeader className="space-y-2">

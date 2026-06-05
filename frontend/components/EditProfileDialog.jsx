@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setAuthUser } from "@/app/(main)/redux/authSlice";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   Dialog,
   DialogContent,
@@ -16,93 +17,93 @@ import {
 
 const API = process.env.NEXT_PUBLIC_API_URI;
 
-/* ================= FIELD COMPONENT ================= */
-const Field = ({
-  label,
-  name,
-  type = "text",
-  placeholder,
-  form,
-  onChange,
-  hint,
-}) => (
-  <div className="flex flex-col gap-1">
-    {/* LABEL */}
-    <label
-      htmlFor={name}
-      className="text-xs tracking-wide text-zinc-400 uppercase flex justify-between"
-    >
-      <span>{label}</span>
-    </label>
+/* ---------------- SECTION ---------------- */
+function Section({ title, children }) {
+  return (
+    <div className="space-y-3">
+      <h3 className="text-xs tracking-widest text-zinc-500 uppercase">
+        {title}
+      </h3>
+      <div className="space-y-3">{children}</div>
+    </div>
+  );
+}
 
-    {/* INPUT */}
-    <Input
-      id={name}
-      name={name}
-      type={type}
-      value={form[name] ?? ""}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="bg-zinc-900 border-zinc-800 focus-visible:ring-indigo-500"
-    />
+/* ---------------- FIELD ---------------- */
+function Field({ label, ...props }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-xs text-zinc-500">{label}</label>
+      <Input
+        {...props}
+        className="
+          bg-zinc-900/60
+          border-zinc-800
+          focus:border-blue-500
+          focus:ring-1 focus:ring-blue-500
+          transition
+        "
+      />
+    </div>
+  );
+}
 
-    {/* HINT */}
-    {hint && (
-      <span className="text-[11px] text-zinc-500">{hint}</span>
-    )}
-  </div>
-);
+/* ---------------- MAIN ---------------- */
+export default function EditProfileDialog() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
-/* ================= EDIT TASK DIALOG ================= */
-export default function EditTaskDialog({ task, onUpdated }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    priority: "medium",
-    status: "pending",
-    dueDate: "",
+    name: "",
+    username: "",
+    email: "",
+    phone: "",
+    department: "",
+    designation: "",
+    gender: "prefer not to say",
+    profilePicture: "",
   });
 
-  /* sync task → form */
   useEffect(() => {
-    if (!task) return;
+    if (!user) return;
 
     setForm({
-      title: task.title || "",
-      description: task.description || "",
-      priority: task.priority || "medium",
-      status: task.status || "pending",
-      dueDate: task.dueDate ? task.dueDate.slice(0, 10) : "",
+      name: user.name || "",
+      username: user.username || "",
+      email: user.email || "",
+      phone: user.phone || "XXXXXXXXXX",
+      department: user.department || "",
+      designation: user.designation || "",
+      gender: user.gender || "prefer not to say",
+      profilePicture: user.profilePicture || "",
     });
-  }, [task]);
+  }, [user]);
 
   const onChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
 
-  /* ================= UPDATE TASK ================= */
-  const updateTask = async () => {
-    if (!task?._id) return;
+  const updateProfile = async () => {
+    if (!user?._id) return;
 
     try {
       setLoading(true);
 
       const res = await axios.put(
-        `${API}/api/v1/task/${task._id}`,
+        `${API}/api/v1/user/${user._id}`,
         form,
         { withCredentials: true }
       );
 
       if (res.data.success) {
-        onUpdated?.();
+        dispatch(setAuthUser(res.data.user));
         setOpen(false);
       }
     } catch (err) {
-      console.error("Task update failed:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -110,128 +111,185 @@ export default function EditTaskDialog({ task, onUpdated }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* TRIGGER */}
       <DialogTrigger asChild>
-        <Button className="bg-blue-500/20 text-blue-300 hover:bg-blue-500/30">
-          Edit Task
+        <Button className="bg-white text-black hover:bg-zinc-200">
+          Edit Profile
         </Button>
       </DialogTrigger>
 
-      {/* MODAL */}
-      <DialogContent className="max-w-[95vw] sm:max-w-lg bg-zinc-950 text-white border border-zinc-800 rounded-2xl p-6">
-
+      <DialogContent
+        className="
+          w-[100vw]
+          sm:w-[95vw]
+          sm:max-w-3xl
+          lg:max-w-5xl
+          p-0
+          bg-zinc-950
+          border border-zinc-800
+          text-white
+          overflow-hidden
+          md:max-h-[100vh]
+          sm:max-h-[90vh]
+          max-h-[85vh]
+          flex flex-col scrollable
+        "
+      >
         {/* HEADER */}
-        <DialogHeader className="space-y-2">
-          <DialogTitle className="text-2xl font-semibold">
-            Edit Task Details
+        <DialogHeader className="p-4 sm:p-6 border-b border-zinc-800">
+          <DialogTitle className="text-base sm:text-lg">
+            Edit Profile
           </DialogTitle>
-
-          <p className="text-sm text-zinc-400">
-            Update task information like title, description, priority, status, and due date.
-          </p>
         </DialogHeader>
 
         {/* BODY */}
-        <div className="mt-6 space-y-5">
+        <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
 
-          {/* TITLE */}
-          <Field
-            label="Task Title"
-            name="title"
-            placeholder="e.g. Fix login bug"
-            form={form}
-            onChange={onChange}
-            hint="This is the main task title visible to everyone"
-          />
+          {/* MOBILE HEADER (PROFILE SUMMARY) */}
+          <div className="md:hidden p-4 flex items-center gap-3 border-b border-zinc-800">
+            <img
+              src={form.profilePicture || "/avatar.png"}
+              className="w-12 h-12 rounded-full object-cover border border-zinc-700"
+            />
+            <div>
+              <p className="text-sm font-medium">
+                {form.name || "Your Name"}
+              </p>
+              <p className="text-xs text-zinc-500">
+                @{form.username || "username"}
+              </p>
+            </div>
+          </div>
 
-          {/* DESCRIPTION */}
-          <div className="flex flex-col gap-1">
-            <label className="text-xs tracking-wide text-zinc-400 uppercase">
-              Task Description
-            </label>
-
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={onChange}
-              placeholder="Describe what needs to be done..."
-              className="w-full min-h-[120px] p-3 rounded-md bg-zinc-900 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          {/* DESKTOP LEFT PANEL */}
+          <div className="
+            hidden md:flex
+            p-6
+            w-[320px]
+            border-r border-zinc-800
+            flex-col items-center gap-4
+          ">
+            <img
+              src={form.profilePicture || "/avatar.png"}
+              className="w-24 h-24 rounded-full object-cover border border-zinc-700"
             />
 
-            <span className="text-[11px] text-zinc-500">
-              Provide clear instructions for the employee
-            </span>
-          </div>
-
-          {/* GRID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            {/* PRIORITY */}
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-zinc-400 uppercase">
-                Priority Level
-              </label>
-
-              <select
-                name="priority"
-                value={form.priority}
-                onChange={onChange}
-                className="p-2 rounded-md bg-zinc-900 border border-zinc-800"
-              >
-                <option value="low">Low Priority</option>
-                <option value="medium">Medium Priority</option>
-                <option value="high">High Priority</option>
-                <option value="critical">Critical Priority</option>
-              </select>
+            <div className="text-center">
+              <p className="text-sm font-medium">{form.name}</p>
+              <p className="text-xs text-zinc-500">
+                @{form.username}
+              </p>
             </div>
 
-            {/* STATUS */}
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-zinc-400 uppercase">
-                Task Status
-              </label>
-
-              <select
-                name="status"
-                value={form.status}
-                onChange={onChange}
-                className="p-2 rounded-md bg-zinc-900 border border-zinc-800"
-              >
-                <option value="pending">Pending</option>
-                <option value="in-progress">In Progress</option>
-                <option value="under-review">Under Review</option>
-                <option value="completed">Completed</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
+            <Field
+              label="Profile Image URL"
+              name="profilePicture"
+              value={form.profilePicture}
+              onChange={onChange}
+            />
           </div>
 
-          {/* DUE DATE */}
-          <Field
-            label="Due Date"
-            name="dueDate"
-            type="date"
-            form={form}
-            onChange={onChange}
-            hint="Deadline for completing this task"
-          />
+          {/* FORM */}
+          <div className="
+            flex-1
+            p-4 sm:p-6
+            space-y-6
+            overflow-y-auto
+            pb-24
+          ">
+            <Section title="Identity">
+              <Field
+                label="Full Name"
+                name="name"
+                value={form.name}
+                onChange={onChange}
+              />
+              <Field
+                label="Username"
+                name="username"
+                value={form.username}
+                onChange={onChange}
+              />
+            </Section>
+
+            <Section title="Contact">
+              <Field
+                label="Email"
+                name="email"
+                value={form.email}
+                onChange={onChange}
+              />
+              <Field
+                label="Phone"
+                name="phone"
+                value={form.phone}
+                onChange={onChange}
+              />
+            </Section>
+
+            <Section title="Work">
+              <Field
+                label="Department"
+                name="department"
+                value={form.department}
+                onChange={onChange}
+              />
+              <Field
+                label="Designation"
+                name="designation"
+                value={form.designation}
+                onChange={onChange}
+              />
+            </Section>
+
+            <Section title="Preferences">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-zinc-500">
+                  Gender
+                </label>
+
+                <select
+                  name="gender"
+                  value={form.gender}
+                  onChange={onChange}
+                  className="
+                    bg-zinc-900
+                    border border-zinc-800
+                    p-3 rounded-md
+                    focus:border-blue-500
+                    outline-none
+                  "
+                >
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="prefer not to say">
+                    Prefer not to say
+                  </option>
+                </select>
+              </div>
+            </Section>
+          </div>
         </div>
 
-        {/* ACTIONS */}
-        <div className="mt-6 flex gap-3">
+        {/* MOBILE + DESKTOP FIXED FOOTER */}
+        <div className="
+          sticky bottom-0
+          p-4
+          border-t border-zinc-800
+          bg-zinc-950
+          flex flex-col sm:flex-row gap-3
+        ">
           <Button
             variant="outline"
             onClick={() => setOpen(false)}
-            disabled={loading}
-            className="flex-1 border-zinc-700 hover:bg-zinc-800"
+            className="border-zinc-700 w-full sm:w-auto"
           >
             Cancel
           </Button>
 
           <Button
-            onClick={updateTask}
+            onClick={updateProfile}
             disabled={loading}
-            className="flex-1 bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 w-full sm:w-auto"
           >
             {loading ? "Saving..." : "Save Changes"}
           </Button>

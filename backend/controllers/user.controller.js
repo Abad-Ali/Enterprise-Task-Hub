@@ -110,6 +110,7 @@ export const loginUser = async (req, res) => {
       department: user.department,
       designation: user.designation,
       employeeId: user.employeeId,
+      profilePicture: user.profilePicture
     };
 
     return res

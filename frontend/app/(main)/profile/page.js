@@ -119,7 +119,7 @@ export default function ProfilePage() {
 
                 <Avatar className="w-24 h-24 border border-black/10">
                   <AvatarImage
-                    src={preview || "/default_pic.jpg"}
+                    src={user?.profilePicture || "/default_pic.jpg"}
                     alt={user?.name}
                   />
                   <AvatarFallback className="bg-white/10 text-xl">
@@ -127,10 +127,10 @@ export default function ProfilePage() {
                   </AvatarFallback>
                 </Avatar>
 
-                <label className="absolute bottom-0 right-0 text-[10px] px-2 py-1 rounded-full bg-black/10 cursor-pointer hover:bg-black/20">
+                {/* <label className="absolute bottom-0 right-0 text-[10px] px-2 py-1 rounded-full bg-black/10 cursor-pointer hover:bg-black/20">
                   edit
                   <input type="file" hidden onChange={handleImageChange} />
-                </label>
+                </label> */}
               </div>
 
               <div>
