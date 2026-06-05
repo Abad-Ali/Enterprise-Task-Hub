@@ -319,7 +319,11 @@ export default function ManageTasks() {
                           {task.attachments.map((attachment, index) => (
                             <a
                               key={index}
-                              href={attachment}
+                              href={
+                                attachment.startsWith("http")
+                                  ? attachment
+                                  : `${attachment}`
+                              }
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center gap-2 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition text-blue-300 break-all"

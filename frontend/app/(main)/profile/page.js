@@ -117,7 +117,7 @@ export default function ProfilePage() {
                   className="absolute inset-[-6px] rounded-full border-[3px] border-e-blue-700 border-l-blue-700 border-b-[#0f172b] border-t-[#0f172b]"
                 />
 
-                <Avatar className="w-24 h-24 border border-black/10">
+                <Avatar className="w-24 h-24 border-2 border-blue-700">
                   <AvatarImage
                     src={user?.profilePicture || "/default_pic.jpg"}
                     alt={user?.name}
