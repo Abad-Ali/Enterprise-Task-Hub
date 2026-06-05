@@ -15,12 +15,14 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { useSelector } from "react-redux";
 
 const API = process.env.NEXT_PUBLIC_API_URI;
 
 const COLORS = ["#22c55e", "#facc15", "#ef4444"];
 
 export default function Dashboard() {
+  const user = useSelector((state) => state.auth.user);
   const role = "manager";
 
   const [stats, setStats] = useState(null);
@@ -81,7 +83,7 @@ export default function Dashboard() {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-6xl mx-auto"
       >
-        <h1 className="text-3xl font-semibold">Manager Dashboard</h1>
+        <h1 className="text-3xl font-semibold">{user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()} Dashboard</h1>
         <p className="text-white/50 text-sm mt-1">
           Live overview of task activity
         </p>

@@ -163,7 +163,7 @@ export default function ManageTasks() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8 text-center"
       >
-        <h1 className="text-5xl font-bold tracking-tight">
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
           Enterprise Task Hub
         </h1>
         <p className="text-white/60 mt-2">

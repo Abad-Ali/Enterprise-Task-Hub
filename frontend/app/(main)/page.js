@@ -43,7 +43,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-4xl sm:text-5xl font-bold leading-tight"
+            className="text-4xl sm:text-5xl font-bold leading-tight text-center md:text-start"
           >
             Enterprise Task Hub
           </motion.h1>
@@ -52,7 +52,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mt-4 text-white/70 text-lg"
+            className="mt-4 text-white/70 text-lg text-center md:text-start"
           >
             Assign, track, and deliver work efficiently across your team.
             A modern enterprise task management system built for productivity.
