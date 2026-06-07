@@ -27,6 +27,7 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <ReduxProvider>
+          <Toaster richColors position="bottom-right" />
           <ProtectedAuth>
         <div className="min-h-screen w-full relative bg-black">
           {/* X Organizations Black Background with Top Glow */}
@@ -40,7 +41,6 @@ export default function RootLayout({ children }) {
           {/* Your Content/Components */}
         {children}
         </div>
-        <Toaster />
         </ProtectedAuth>
         </ReduxProvider>
       </body>

@@ -97,7 +97,7 @@ export default function Footer() {
 
             <div className="mt-10 border-t border-white/10" />
 
-            <div className="pt-6 flex flex-col md:flex-row justify-between text-white/60 text-sm">
+            <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-white/60 text-sm">
               <p>© {new Date().getFullYear()} Enterprise Task Hub. All rights reserved.</p>
 
               <div className="flex gap-5 mt-3 md:mt-0">
@@ -111,7 +111,7 @@ export default function Footer() {
         </div>
       </motion.footer>
 
-      {/* ✅ DIALOG CONTENT (REAL PROJECT CONTENT) */}
+      {/*  DIALOG CONTENT (REAL PROJECT CONTENT) */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="bg-black/10 backdrop-blur-sm border border-white/20 text-white max-w-2xl">
 
